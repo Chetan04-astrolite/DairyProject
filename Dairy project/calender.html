@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meadowbrook Dairy Farm - 2025 Calendar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #87CEEB 0%, #98FB98 50%, #FFE4B5 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #2E7D32, #4CAF50);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '🐄';
+            position: absolute;
+            top: 10px;
+            left: 30px;
+            font-size: 3em;
+            opacity: 0.3;
+        }
+
+        .header::after {
+            content: '🥛';
+            position: absolute;
+            top: 10px;
+            right: 30px;
+            font-size: 3em;
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .year-navigation {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .year-btn {
+            background: linear-gradient(45deg, #FF6B35, #F7931E);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 0 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .year-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .current-year {
+            font-size: 2em;
+            color: #2E7D32;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .month-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .month-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .month-header {
+            text-align: center;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            color: white;
+            font-weight: bold;
+            font-size: 1.4em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .summer { background: linear-gradient(45deg, #FF4500, #FFA500); }
+        .rainy { background: linear-gradient(45deg, #8B4513, #D2691E); }
+        .winter { background: linear-gradient(45deg, #4169E1, #87CEEB); }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+            margin-bottom: 15px;
+        }
+
+        .day-header {
+            text-align: center;
+            font-weight: bold;
+            padding: 8px 4px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #2E7D32;
+        }
+
+        .day {
+            text-align: center;
+            padding: 8px 4px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9em;
+        }
+
+        .day:hover {
+            background: #4CAF50;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .other-month {
+            color: #ccc;
+        }
+
+        .special-day {
+            background: linear-gradient(45deg, #FF6B35, #F7931E);
+            color: white;
+            font-weight: bold;
+        }
+
+        .farm-activities {
+            background: linear-gradient(135deg, #E8F5E8, #F0FFF0);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 5px solid #4CAF50;
+        }
+
+        .farm-activities h4 {
+            color: #2E7D32;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .activity-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .activity-list li {
+            padding: 5px 0;
+            color: #555;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .activity-list li::before {
+            content: '🌾';
+            position: absolute;
+            left: 0;
+            top: 5px;
+        }
+
+        .milk-production {
+            background: linear-gradient(135deg, #FFF8DC, #FFFACD);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid #FF6B35;
+        }
+
+        .milk-production h5 {
+            color: #D2691E;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .production-info {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .weather-info {
+            background: linear-gradient(135deg, #E0F6FF, #E8F4F8);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            text-align: center;
+            border: 2px solid #87CEEB;
+        }
+
+        .weather-info span {
+            font-size: 1.5em;
+            margin-right: 8px;
+        }
+
+        .legend {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px auto;
+            max-width: 800px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .legend h3 {
+            color: #2E7D32;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>ATS Dairy Farm</h1>
+        <p>Professional Dairy Operations Calendar</p>
+    </header>
+
+    <div class="year-navigation">
+        <button class="year-btn" onclick="changeYear(-1)">← Previous</button>
+        <span class="current-year" id="currentYear">2025</span>
+        <button class="year-btn" onclick="changeYear(1)">Next →</button>
+    </div>
+
+    <div class="calendar-grid" id="calendarGrid">
+    </div>
+
+    <div class="legend">
+        <h3>🏭 Dairy Farm Calendar Legend</h3>
+        <div class="legend-grid">
+            <div class="legend-item">
+                <div class="legend-color summer"></div>
+                <span>Summer Season (Peak Production)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color rainy"></div>
+                <span>Rainy Season (Harvest & Preparation)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color winter"></div>
+                <span>Winter Season (Indoor Feeding)</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="dayModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentYear = 2025;
+        
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        const monthActivities = {
+            0: { // January
+                season: "winter",
+                activities: [
+                    "Indoor feeding of dairy cows",
+                    "Equipment maintenance and repair",
+                    "Breeding program planning",
+                    "Milk quality testing",
+                    "Facility winterization checks"
+                ],
+                production: "Lower production (15-20L/cow/day)",
+                weather: "❄️ Cold weather management"
+            },
+            1: { // February
+                season: "winter",
+                activities: [
+                    "Artificial insemination programs",
+                    "Feed inventory management",
+                    "Health monitoring of pregnant cows",
+                    "Milking equipment calibration",
+                    "Staff training programs"
+                ],
+                production: "Moderate production (18-22L/cow/day)",
+                weather: "🌨️ Late winter preparations"
+            },
+            2: { // March
+                season: "summer",
+                activities: [
+                    "Spring pasture preparation",
+                    "Calving season begins",
+                    "Fresh cow management",
+                    "Vaccination programs",
+                    "Pasture rotation planning"
+                ],
+                production: "Increasing production (20-25L/cow/day)",
+                weather: "⛱️ Early summer transition"
+            },
+            3: { // April
+                season: "summer",
+                activities: [
+                    "Pasture grazing begins",
+                    "Calf care and monitoring",
+                    "Spring breeding programs",
+                    "Manure field application",
+                    "Equipment preparation for busy season"
+                ],
+                production: "Good production (22-28L/cow/day)",
+                weather: "🍃 Mild summer weather"
+            },
+            4: { // May
+                season: "summer",
+                activities: [
+                    "Peak calving season",
+                    "Fresh pasture management",
+                    "Herd health evaluations",
+                    "Milk production optimization",
+                    "First cut hay preparation"
+                ],
+                production: "High production (25-30L/cow/day)",
+                weather: "☀️ Summer heat management"
+            },
+            5: { // June
+                season: "summer",
+                activities: [
+                    "First hay cutting",
+                    "Heat stress management",
+                    "Pasture rotation intensive",
+                    "Breeding season peak",
+                    "Milk cooling system maintenance"
+                ],
+                production: "Peak production (28-35L/cow/day)",
+                weather: "🌞 Peak summer conditions"
+            },
+            6: { // July
+                season: "rainy",
+                activities: [
+                    "Second hay cutting",
+                    "Intensive pasture management",
+                    "Heat abatement measures",
+                    "Fly control programs",
+                    "Water system maintenance"
+                ],
+                production: "Very high production (30-35L/cow/day)",
+                weather: "💧 Initial rainy conditions"
+            },
+            7: { // August
+                season: "rainy",
+                activities: [
+                    "Corn silage harvest begins",
+                    "Drought management if needed",
+                    "Breeding evaluation",
+                    "Facility ventilation optimization",
+                    "Feed quality testing"
+                ],
+                production: "High production (28-33L/cow/day)",
+                weather: "🌩️ Rainy weather protocols"
+            },
+            8: { // September
+                season: "rainy",
+                activities: [
+                    "Corn silage harvest peak",
+                    "Fall breeding programs",
+                    "Pasture overseeding",
+                    "Equipment winterization prep",
+                    "Feed storage preparation"
+                ],
+                production: "Good production (25-30L/cow/day)",
+                weather: "🌻 Rainy harvest season"
+            },
+            9: { // October
+                season: "rainy",
+                activities: [
+                    "Final harvest activities",
+                    "Dry cow management",
+                    "Facility preparations for winter",
+                    "Annual herd health reviews",
+                    "Feed procurement for winter"
+                ],
+                production: "Moderate production (22-28L/cow/day)",
+                weather: "🌧️ Cool rainy weather"
+            },
+            10: { // November
+                season: "winter",
+                activities: [
+                    "Winter feeding preparation",
+                    "Pregnancy checking",
+                    "Equipment winterization",
+                    "Heifer breeding programs",
+                    "Facility heating system checks"
+                ],
+                production: "Lower production (20-25L/cow/day)",
+                weather: "🌬️ Pre-winter preparations"
+            },
+            11: { // December
+                season: "winter",
+                activities: [
+                    "Year-end herd evaluations",
+                    "Holiday staff scheduling",
+                    "Annual equipment maintenance",
+                    "Winter feed management",
+                    "Planning for next year"
+                ],
+                production: "Low production (18-23L/cow/day)",
+                weather: "❄️ Winter management mode"
+            }
+        };
+
+        function changeYear(direction) {
+            currentYear += direction;
+            document.getElementById('currentYear').textContent = currentYear;
+            generateCalendar();
+        }
+
+        function getDaysInMonth(year, month) {
+            return new Date(year, month + 1, 0).getDate();
+        }
+
+        function getFirstDayOfMonth(year, month) {
+            return new Date(year, month, 1).getDay();
+        }
+
+        function generateCalendar() {
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+
+            for (let month = 0; month < 12; month++) {
+                const monthCard = createMonthCard(month);
+                calendarGrid.appendChild(monthCard);
+            }
+        }
+
+        function createMonthCard(month) {
+            const monthData = monthActivities[month];
+            const daysInMonth = getDaysInMonth(currentYear, month);
+            const firstDay = getFirstDayOfMonth(currentYear, month);
+            
+            const card = document.createElement('div');
+            card.className = 'month-card';
+            
+            card.innerHTML = `
+                <div class="month-header ${monthData.season}">
+                    ${monthNames[month]} ${currentYear}
+                </div>
+                
+                <div class="days-grid">
+                    <div class="day-header">Sun</div>
+                    <div class="day-header">Mon</div>
+                    <div class="day-header">Tue</div>
+                    <div class="day-header">Wed</div>
+                    <div class="day-header">Thu</div>
+                    <div class="day-header">Fri</div>
+                    <div class="day-header">Sat</div>
+                    ${generateDaysHTML(month, daysInMonth, firstDay)}
+                </div>
+                
+                <div class="farm-activities">
+                    <h4>🚜 Farm Activities</h4>
+                    <ul class="activity-list">
+                        ${monthData.activities.map(activity => `<li>${activity}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="milk-production">
+                    <h5>🥛 Milk Production</h5>
+                    <div class="production-info">${monthData.production}</div>
+                </div>
+                
+                <div class="weather-info">
+                    <span>${monthData.weather.split(' ')[0]}</span>
+                    ${monthData.weather.substring(monthData.weather.indexOf(' ') + 1)}
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function generateDaysHTML(month, daysInMonth, firstDay) {
+            let html = '';
+            
+            // Previous month's trailing days
+            const prevMonth = month === 0 ? 11 : month - 1;
+            const prevYear = month === 0 ? currentYear - 1 : currentYear;
+            const daysInPrevMonth = getDaysInMonth(prevYear, prevMonth);
+            
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const day = daysInPrevMonth - i;
+                html += `<div class="day other-month">${day}</div>`;
+            }
+            
+            // Current month's days
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isSpecialDay = isSpecialFarmDay(month, day);
+                const dayClass = isSpecialDay ? 'day special-day' : 'day';
+                html += `<div class="${dayClass}" onclick="showDayDetails(${month}, ${day})">${day}</div>`;
+            }
+            
+            // Next month's leading days
+            const totalCells = Math.ceil((daysInMonth + firstDay) / 7) * 7;
+            const remainingCells = totalCells - (daysInMonth + firstDay);
+            
+            for (let day = 1; day <= remainingCells; day++) {
+                html += `<div class="day other-month">${day}</div>`;
+            }
+            
+            return html;
+        }
+
+        function isSpecialFarmDay(month, day) {
+            const specialDays = {
+                0: [15], // January - Equipment maintenance day
+                1: [14], // February - Breeding evaluation
+                2: [1, 20], // March - Spring start, vaccination day
+                3: [15], // April - Pasture evaluation
+                4: [1, 30], // May - Calving peak, hay cutting
+                5: [15], // June - Heat management check
+                6: [4, 20], // July - Independence day, mid-summer evaluation
+                7: [15], // August - Harvest planning
+                8: [1, 22], // September - Harvest start, equinox
+                9: [31], // October - Halloween/preparation day
+                10: [15], // November - Winter prep
+                11: [25] // December - Christmas
+            };
+            
+            return specialDays[month] && specialDays[month].includes(day);
+        }
+
+        function showDayDetails(month, day) {
+            const monthData = monthActivities[month];
+            const modal = document.getElementById('dayModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.innerHTML = `
+                <h2>🗓️ ${monthNames[month]} ${day}, ${currentYear}</h2>
+                <div style="margin: 20px 0;">
+                    <h3 style="color: #2E7D32; margin-bottom: 15px;">Daily Farm Schedule</h3>
+                    <div style="background: #f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h4>🌅 Morning Tasks (5:00 AM - 9:00 AM)</h4>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li>First milking session</li>
+                            <li>Feed preparation and distribution</li>
+                            <li>Health check of all animals</li>
+                            <li>Equipment inspection</li>
+                        </ul>
+                    </div>
+                    <div style="background: #f0f8ff; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h4>☀️ Midday Tasks (9:00 AM - 3:00 PM)</h4>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li>Pasture management and rotation</li>
+                            <li>Facility maintenance</li>
+                            <li>Record keeping and documentation</li>
+                            <li>Special activities for ${monthNames[month]}</li>
+                        </ul>
+                    </div>
+                    <div style="background: #fffaf0; padding: 15px; border-radius: 10px;">
+                        <h4>🌆 Evening Tasks (3:00 PM - 8:00 PM)</h4>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li>Second milking session</li>
+                            <li>Evening feeding</li>
+                            <li>Barn cleaning and preparation</li>
+                            <li>Equipment sanitization</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="background: linear-gradient(135deg, #E8F5E8, #F0FFF0); padding: 15px; border-radius: 10px; margin-top: 20px;">
+                    <h4 style="color: #2E7D32;">📊 Expected Production: ${monthData.production}</h4>
+                    <p style="margin-top: 10px; color: #555;">Weather: ${monthData.weather}</p>
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+        }
+
+        // Modal event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('dayModal');
+            const closeBtn = document.querySelector('.close');
+            
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+            }
+            
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            }
+            
+            generateCalendar();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRMS Login</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: #008cdd;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px;
+            margin-left: 100px;
+            margin-right: 50px;
+        }
+
+        .welcome-section {
+            width: 50%;
+            padding-left: 50px;
+        }
+
+        .welcome-section h1 {
+            font-size: 28px;
+            margin-top: 20px;
+        }
+
+        .login-box {
+            width: 300px;
+            background: #ffffff;
+            border-radius: 5px;
+            
+            text-align: center;
+            padding: 20px 40px;
+            margin-right: 50px;
+        }
+
+        .login-box h2 {
+            color: #008cdd;
+            margin-bottom: 20px;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .forgot-password {
+            color: #008cdd;
+            text-decoration: none;
+            display: block;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .login-btn {
+            width: 100%;
+            background-color: #008cdd;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 10px;
+            margin-top: 15px;
+        }
+
+        .login-btn:hover {
+            background-color: #0073b7;
+        }
+
+        .login-box p {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .login-box a {
+            color: #008cdd;
+            text-decoration: none;
+        }
+
+        .login-box a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9em;
+            color: #777;
+            background-color: #f9f9f9;
+        }
+
+        footer a {
+            color: #007bc1;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">Human Resource Management System</div>
+    
+    <div class="container">
+        <div class="welcome-section">
+            <img src="https://www.starlinkindia.com/blog/wp-content/uploads/2020/12/TOP-REASONS-WHY-COMPANIES-INVEST-IN-AN-ATTENDANCE-MANAGEMENT-SYSTEM.jpg" alt="HRMS Welcome Image" />
+            <h1>Welcome to <br><b>Attendance Management System</b></h1>
+        </div>
+        
+        <div class="login-box">
+            <h2>Login</h2>
+            <form action="CRMdashboard.html" method="get">
+                <input type="text" class="input-box" placeholder="Enter Login ID" required>
+                <input type="password" class="input-box" placeholder="Enter Password" required>
+                <a href="forgotpassword.html" class="forgot-password">Forgot Password?</a>
+                <button type="submit" class="login-btn">Login</button>
+                <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Astrolite Tech Solutions Pvt Ltd. All Rights Reserved. Astrolite | 
+        <a href="https://www.astrolitetech.com" target="_blank">www.astrolitetech.com</a></p>
+    </footer>
+</body>
+</html>

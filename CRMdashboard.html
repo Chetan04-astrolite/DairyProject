@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CRM Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: Arial, sans-serif;
+      background-color: #eef2f7;
+      height: 100%;
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(45deg, #4b6cb7, #182848);
+      padding-top: 20px;
+      position: fixed;
+      height: 100%;
+      box-shadow: 3px 0px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar .logo {
+      text-align: center;
+      font-size: 26px;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 40px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      padding: 15px 20px;
+      color: white;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .sidebar ul li:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .main-content {
+      margin-left: 260px;
+      width: 100%;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #fff;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .header .title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4b6cb7;
+    }
+
+    .header .user-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .header .user-info img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 12px;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+    }
+
+    .card:nth-child(1) {
+      background-color: #ff7f50;
+    }
+
+    .card:nth-child(2) {
+      background-color: #00b894;
+    }
+
+    .card:nth-child(3) {
+      background-color: #0984e3;
+    }
+
+    .card:nth-child(4) {
+      background-color: #6c5ce7;
+    }
+
+    .card:nth-child(5) {
+      background-color: #e17055;
+    }
+
+    .card:nth-child(6) {
+      background-color: #fd79a8;
+    }
+
+    .performance-section {
+      margin-top: 40px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .performance-section h2 {
+      margin-bottom: 15px;
+      color: #4b6cb7;
+    }
+
+    canvas {
+      width: 100%;
+      height: 200px;
+      border-radius: 10px;
+      background-color: #f5f5f5;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 220px;
+      }
+      .main-content {
+        margin-left: 220px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+      }
+      .main-content {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">CRM</div>
+      <ul>
+        <li>Dashboard</li>
+        <li>Clients</li>
+        <li>Calendar</li>
+        <li>Analytics</li>
+        <li>Home</li>
+        <li>Settings</li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header">
+        <div class="title">CRM Dashboard</div>
+        <div class="user-info">
+          <img src="Images/ATSlogo.jpg" alt="User" />
+          <div><b>ASTROLITE TECH SOLUTIONS</b></div>
+        </div>
+      </div>
+
+      <!-- Dashboard Cards -->
+      <div class="card-container">
+        <div class="card">
+          <h3>Total Clients</h3>
+          <p>100</p>
+        </div>
+        <div class="card">
+          <h3>Revenue</h3>
+          <p>₹1,00,000</p>
+        </div>
+        <div class="card">
+          <h3>New Leads</h3>
+          <p>20 this week</p>
+        </div>
+        <div class="card">
+          <h3>Conversion Rate</h3>
+          <p>15%</p>
+        </div>
+        <div class="card">
+          <h3>Tasks Pending</h3>
+          <p>2 open tasks</p>
+        </div>
+        <div class="card">
+          <h3>Meetings Today</h3>
+          <p>5 scheduled</p>
+        </div>
+      </div>
+
+      <!-- Chart Section -->
+      <div class="performance-section">
+        <h2>Performance Overview</h2>
+        <canvas id="barChart" width="400" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simple Bar Chart using Canvas
+    const canvas = document.getElementById("barChart");
+    const ctx = canvas.getContext("2d");
+
+    const data = [80, 120, 150, 100, 130, 90];
+    const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+    const barWidth = 40;
+    const gap = 30;
+    const xStart = 40;
+    const maxHeight = 160;
+
+    function drawChart() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      data.forEach((value, index) => {
+        const height = (value / 160) * maxHeight;
+        const x = xStart + index * (barWidth + gap);
+        const y = canvas.height - height - 20;
+
+        ctx.fillStyle = "#4b6cb7";
+        ctx.fillRect(x, y, barWidth, height);
+
+        // Label
+        ctx.fillStyle = "#333";
+        ctx.textAlign = "center";
+        ctx.fillText(labels[index], x + barWidth / 2, canvas.height - 5);
+      });
+    }
+
+    drawChart();
+  </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Milk Collection Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      background-color: #216778;
+      color: white;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .logo {
+      position: absolute;
+      left: 20px;
+      height: 40px;
+    }
+
+    .dashboard-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .stats-container {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      background-color: lightgray;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-weight: bold;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-box:nth-child(1) { background-color: #7fff00; }
+    .stat-box:nth-child(2) { background-color: #00e5ff; }
+    .stat-box:nth-child(3) { background-color: #f48fb1; }
+    .stat-box:nth-child(4) { background-color: #ccff00; }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+    }
+
+    .controls input[type="text"] {
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 2px solid #333;
+    }
+
+    .controls select {
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 2px solid #333;
+    }
+
+    table {
+      width: 90%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      /* border-color: black; */
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #ffffff;
+    }
+
+    .status-active {
+      color: green;
+      font-weight: bold;
+    }
+
+    .status-pending {
+      color: red;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .controls {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .logo {
+        position: static;
+        margin-bottom: 10px;
+      }
+
+      header {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <!-- Replace the src value below with your own logo file if needed -->
+    <img src="./ATSlogo.jpg" alt="Logo" class="logo" />
+    <div class="dashboard-title">Milk Collection Dashboard</div>
+  </header>
+
+  <div class="stats-container">
+    <div class="stat-box">Total Suppliers: 60</div>
+    <div class="stat-box">Today's Collection: 50L</div>
+    <div class="stat-box">Avg. Quality: B</div>
+    <div class="stat-box">Pending Payments: ₹30,000</div>
+  </div>
+
+  <div class="controls">
+    <select id="statusFilter">
+      <option>All Statuses</option>
+      <option>Active</option>
+      <option>Pending</option>
+    </select>
+
+    <input type="text" id="searchInput" placeholder="Search by supplier name..." />
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Supplier ID</th>
+        <th>Name</th>
+        <th>Location</th>
+        <th>Yield (L)</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="supplierTable">
+      <tr>
+        <td>ATS01</td>
+        <td>Chetan</td>
+        <td>Guntur</td>
+        <td>35</td>
+        <td class="status-active">Active</td>
+      </tr>
+      <tr>
+        <td>ATS02</td>
+        <td>Charan</td>
+        <td>Hyderabad</td>
+        <td>28</td>
+        <td class="status-active">Active</td>
+      </tr>
+      <tr>
+        <td>ATS03</td>
+        <td>Vani</td>
+        <td>Kakinada</td>
+        <td>40</td>
+        <td class="status-active">Active</td>
+      </tr>
+      <tr>
+        <td>ATS04</td>
+        <td>Kavita</td>
+        <td>Nellore</td>
+        <td>25</td>
+        <td class="status-pending">Pending</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    const searchInput = document.getElementById("searchInput");
+    const statusFilter = document.getElementById("statusFilter");
+    const table = document.getElementById("supplierTable");
+
+    function filterTable() {
+      const searchValue = searchInput.value.toLowerCase();
+      const statusValue = statusFilter.value.toLowerCase();
+
+      const rows = table.getElementsByTagName("tr");
+      for (let row of rows) {
+        const nameCell = row.cells[1]?.textContent.toLowerCase();
+        const statusCell = row.cells[4]?.textContent.toLowerCase();
+
+        const matchesSearch = nameCell.includes(searchValue);
+        const matchesStatus = statusValue === "all statuses" || statusCell === statusValue;
+
+        row.style.display = matchesSearch && matchesStatus ? "" : "none";
+      }
+    }
+
+    searchInput.addEventListener("input", filterTable);
+    statusFilter.addEventListener("change", filterTable);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Milk Home Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://kit.fontawesome.com/6b9b24a94b.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* [Same styles as before] */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fdfafa;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        header {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 80px;
+            width: 110px;
+            margin-right: 10px;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 5px 15px;
+            width: 300px;
+        }
+
+        .search-container input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .search-container i {
+            margin-left: 10px;
+            color: #333;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .dark-mode-icon, .notification-icon {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .language-dropdown select {
+            padding: 6px 10px;
+            border: 1px solid #00c853;
+            border-radius: 20px;
+            background-color: #fff;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: green;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+        }
+
+        .user-info .name-time {
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+        }
+
+        .user-info .name-time strong {
+            font-size: 16px;
+        }
+
+        .menu-toggle {
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            margin-top: 80px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            margin: 15px 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 10px;
+        }
+
+        .sidebar i {
+            margin-right: 10px;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding-top: 80px;
+            width: calc(100% - 250px);
+            height: calc(100vh - 80px);
+            position: relative;
+        }
+
+        .dashboard-cards {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: white;
+            flex: 1;
+            min-width: 250px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .card-content h3 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .card-content p {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .card-content small {
+            font-size: 14px;
+        }
+
+        .card.customers { background: #e3f2fd; }
+        .card.revenue { background: #e8f5e9; }
+        .card.milk { background: #fff3e0; }
+
+        .recent-activity {
+            margin-top: 40px;
+        }
+
+        .recent-activity h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .activity-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(248, 8, 8, 0.1);
+        }
+
+        .activity-icon {
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+
+        .activity-content {
+            font-size: 16px;
+        }
+
+        .charts-section {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            flex-direction: column;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .chart-container h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        canvas {
+            width: 1000px !important;
+            height: 300px !important;
+        }
+
+        #customerDoughnutChart {
+            width: 200px;
+            height: 100px;
+        }
+
+        .doughnut-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 250px; /* You can adjust height as needed */
+        }
+
+        #customerDoughnutChart {
+            width: 400px !important;
+            height: 250px !important;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin-top: 90px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="logo">
+        <img src="../Images/ATSlogo.jpg" alt="ATS Logo">
+    </div>
+
+    <i class="fas fa-moon dark-mode-icon"></i>
+
+    <div class="search-container">
+        <input type="text" placeholder="Search...">
+        <i class="fas fa-search"></i>
+    </div>
+
+    <div class="top-right">
+        <i class="fas fa-bell notification-icon"></i>
+
+        <div class="language-dropdown">
+            <select>
+                <option>English</option>
+                <option>Hindi</option>
+                <option>Telugu</option>
+            </select>
+        </div>
+
+        <div class="status">
+            <div class="status-dot"></div> Active
+        </div>
+
+        <div class="user-info">
+            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="User">
+            <div class="name-time">
+                <strong>Guest</strong>
+                <!-- Time removed -->
+            </div>
+        </div>
+
+        <i class="fas fa-bars menu-toggle"></i>
+    </div>
+</header>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <h2>DAIRY FARM</h2>
+    <a href="../Dairy project/dashboardoverview.html" target="content-iframe"><i class="fas fa-home"></i> Dashboard</a>
+    <a href="../Dairy project/Customer.html" target="content-iframe"><i class="fas fa-users"></i> Customers</a>
+    <a href="../Dairy project/Products.html" target="content-iframe"><i class="fas fa-box-open"></i> Products</a>
+    <a href="../Dairy project/milkcollection.html" target="content-iframe"><i class="fas fa-cow"></i> Milk Collection</a>
+    <a href="#"><i class="fas fa-calendar-alt"></i> Calendar</a>
+    <a href="#"><i class="fas fa-chart-line"></i> Analytics</a>
+    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+    <a href="login1.html"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <iframe src="../Dairy project/dashboardoverview.html" name="content-iframe"></iframe>
+</div>
+
+</body>
+</html>

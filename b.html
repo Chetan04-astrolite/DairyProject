@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dairy Farm Customer Management</title>
+    <style>
+        :root {
+            --primary: #2c6e49;
+            --secondary: #4c956c;
+            --light: #fefee3;
+            --accent: #d68c45;
+            --dark: #2a2a2a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f9fc;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(44, 110, 73, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 80% 80%, rgba(76, 149, 108, 0.07) 0%, transparent 20%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-icon::before {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .logo-icon::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .logo-text h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text p {
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            position: relative;
+        }
+        
+        .sidebar {
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            border-radius: 16px;
+            padding: 2rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(44, 110, 73, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slide-in 0.6s ease forwards;
+            display: none; /* Initially hidden */
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Styling for select options */
+        .form-group select option {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(214, 140, 69, 0.3);
+        }
+        
+        .btn:hover {
+            background-color: #c07a3b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(214, 140, 69, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(214, 140, 69, 0.4);
+        }
+        
+        .btn-full {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .add-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(214, 140, 69, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .add-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(214, 140, 69, 0.6);
+        }
+        
+        .customer-list {
+            background-color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slide-in 0.6s ease 0.2s forwards;
+        }
+        
+        .customer-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(76, 149, 108, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+        
+        .customer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .customer-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+            position: relative;
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fade-in 0.5s ease forwards;
+        }
+        
+        .customer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        
+        .customer-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--secondary);
+            opacity: 0.7;
+        }
+        
+        .customer-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .customer-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .customer-id {
+            color: #999;
+            font-size: 0.8rem;
+        }
+        
+        .customer-info {
+            margin-bottom: 1rem;
+        }
+        
+        .info-item {
+            display: flex;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .info-label {
+            width: 100px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .info-value {
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .customer-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .purchase-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .purchase-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .purchase-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .action-btn {
+            background-color: transparent;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-btn:hover {
+            background-color: #f8f8f8;
+            color: var(--accent);
+        }
+        
+        .remove-btn {
+            color: #e74c3c;
+            font-size: 1.2rem;
+        }
+        
+        .remove-btn:hover {
+            background-color: #fff8f8;
+            color: #e74c3c;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+            display: none;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ddd;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast i {
+            font-size: 1.2rem;
+        }
+        
+        .toast-success {
+            background-color: #2ecc71;
+        }
+        
+        .toast-error {
+            background-color: #e74c3c;
+        }
+        
+        .milk-drop {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .customer-details {
+            background-color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            animation: fade-in 0.5s ease forwards;
+            display: none;
+        }
+        
+        .customer-details h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.8rem;
+        }
+        
+        .back-btn {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+        
+        .back-btn:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            display: none;
+            animation: fade-in 0.5s ease forwards;
+        }
+        
+        .form-container h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .form-container p {
+            margin-bottom: 1.5rem;
+            color: #666;
+        }
+        
+        .form-container .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-container .form-group label {
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .form-container .form-group input, 
+        .form-container .form-group select {
+            background-color: #f7f9fc;
+            border: 1px solid #eee;
+            color: var(--dark);
+        }
+        
+        .form-container .form-group select {
+            background-color: #f7f9fc;
+            color: var(--dark);
+        }
+        
+        .form-container .form-group select option {
+            background-color: white;
+            color: var(--dark);
+        }
+        
+        @keyframes slide-in {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .customer-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .customer-list-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .add-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+            
+            .form-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <div class="logo-text">
+                    <h1>FRESH DIARY</h1>
+                    <p>Customer Management System</p>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="customer-list" id="customer-list">
+                <div class="customer-list-header">
+                    <h2>Customer Directory</h2>
+                    <div class="search-bar">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Search customers...">
+                    </div>
+                </div>
+                
+                <div class="customer-grid" id="customer-grid">
+                    <!-- Customer cards will be generated here -->
+                </div>
+                
+                <div class="empty-state" id="empty-state">
+                    <i class="fas fa-users-slash"></i>
+                    <h3>No Customers Found</h3>
+                    <p>Add your first customer to get started</p>
+                </div>
+            </div>
+            
+            <div class="form-container" id="form-container">
+                <button class="back-btn" id="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </button>
+                
+                <h2>Add New Customer</h2>
+                <p>Register a new customer to your dairy farm network</p>
+                
+                <form id="customer-form">
+                    <div class="form-group">
+                        <label for="name">Customer Name</label>
+                        <input type="text" id="name" placeholder="Full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="Email address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" placeholder="Phone number" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" placeholder="Delivery address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product">Preferred Product</label>
+                        <select id="product" required>
+                            <option value="">Select product</option>
+                            <option value="Buffalo Milk">Buffalo Milk</option>
+                            <option value="Cow Milk">Cow Milk</option>
+                            <option value="Paneer">Paneer</option>
+                            <option value="Ghee">Ghee</option>
+                            <option value="Curd">Curd</option>
+                            <option value="Buttermilk">Buttermilk</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="frequency">Delivery Frequency</label>
+                        <select id="frequency" required>
+                            <option value="">Select frequency</option>
+                            <option value="Daily">Daily</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Bi-weekly">Bi-weekly</option>
+                            <option value="Monthly">Monthly</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-full">
+                        <i class="fas fa-plus"></i> Add Customer
+                    </button>
+                </form>
+            </div>
+            
+            <div class="customer-details" id="customer-details">
+                <button class="back-btn" id="details-back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </button>
+                
+                <h3>Customer Details</h3>
+                <div class="customer-info" id="customer-details-content">
+                    <!-- Customer details will be shown here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="add-btn" id="add-customer-btn">
+        <i class="fas fa-plus"></i>
+    </div>
+    
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Customer added successfully</span>
+    </div>
+    
+    <script>
+        // Sample initial customers with Indian details
+        let defaultCustomers = [
+            {
+                id: 'C001',
+                name: 'Rajesh Kumar',
+                email: 'rajesh.kumar@gmail.com',
+                phone: '+91 98765 43210',
+                address: '42, Gandhi Road, Pune, Maharashtra',
+                product: 'Buffalo Milk',
+                frequency: 'Daily',
+                joined: 'Jan 15, 2025',
+                spent: '₹4,350'
+            },
+            {
+                id: 'C002',
+                name: 'Priya Sharma',
+                email: 'priya.sharma@gmail.com',
+                phone: '+91 87654 32109',
+                address: '78, Nehru Nagar, Bangalore, Karnataka',
+                product: 'Paneer',
+                frequency: 'Weekly',
+                joined: 'Feb 3, 2025',
+                spent: '₹2,780'
+            },
+            {
+                id: 'C003',
+                name: 'Amit Patel',
+                email: 'amit.patel@gmail.com',
+                phone: '+91 76543 21098',
+                address: '15, Subhash Road, Ahmedabad, Gujarat',
+                product: 'Ghee',
+                frequency: 'Monthly',
+                joined: 'Mar 10, 2025',
+                spent: '₹5,125'
+            }
+        ];
+        
+        // DOM Elements
+        const customerForm = document.getElementById('customer-form');
+        const customerGrid = document.getElementById('customer-grid');
+        const emptyState = document.getElementById('empty-state');
+        const searchInput = document.getElementById('search-input');
+        const toast = document.getElementById('toast');
+        const formContainer = document.getElementById('form-container');
+        const customerList = document.getElementById('customer-list');
+        const addCustomerBtn = document.getElementById('add-customer-btn');
+        const backBtn = document.getElementById('back-btn');
+        const detailsBackBtn = document.getElementById('details-back-btn');
+        const customerDetails = document.getElementById('customer-details');
+        const customerDetailsContent = document.getElementById('customer-details-content');
+        
+        // Customers array to hold data
+        let customers = [];
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCustomersFromLocalStorage();
+            renderCustomers();
+            initDairyAnimations();
+            setupEventListeners();
+        });
+        
+        // Load customers from local storage
+        function loadCustomersFromLocalStorage() {
+            const storedCustomers = localStorage.getItem('dairyFarmCustomers');
+            if (storedCustomers) {
+                customers = JSON.parse(storedCustomers);
+            } else {
+                // If no customers in localStorage, use default customers
+                customers = defaultCustomers;
+                // Save default customers to localStorage
+                saveCustomersToLocalStorage();
+            }
+        }
+        
+        // Save customers to local storage
+        function saveCustomersToLocalStorage() {
+            localStorage.setItem('dairyFarmCustomers', JSON.stringify(customers));
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Add customer button
+            addCustomerBtn.addEventListener('click', function() {
+                showAddCustomerForm();
+            });
+            
+            // Back button
+            backBtn.addEventListener('click', function() {
+                hideAddCustomerForm();
+            });
+            
+            // Details back button
+            detailsBackBtn.addEventListener('click', function() {
+                hideCustomerDetails();
+            });
+            
+            // Customer form submission
+            customerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const newCustomer = {
+                    id: generateCustomerId(),
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value,
+                    product: document.getElementById('product').value,
+                    frequency: document.getElementById('frequency').value,
+                    joined: formatCurrentDate(),
+                    spent: '₹0'
+                };
+                
+                customers.unshift(newCustomer);
+                saveCustomersToLocalStorage();
+                renderCustomers();
+                
+                // Hide form and show customer details
+                hideAddCustomerForm();
+                showCustomerDetails(newCustomer);
+                
+                // Reset form
+                customerForm.reset();
+                
+                showToast('Customer added successfully', 'success');
+                
+                // Create milk drop animation on form submission
+                createMilkDrop(document.querySelector('.btn'));
+            });
+            
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                if (searchTerm === '') {
+                    renderCustomers();
+                    return;
+                }
+                
+                const filteredCustomers = customers.filter(customer => {
+                    return (
+                        customer.name.toLowerCase().includes(searchTerm) ||
+                        customer.email.toLowerCase().includes(searchTerm) ||
+                        customer.phone.toLowerCase().includes(searchTerm) ||
+                        customer.address.toLowerCase().includes(searchTerm) ||
+                        customer.product.toLowerCase().includes(searchTerm)
+                    );
+                });
+                
+                renderCustomers(filteredCustomers);
+            });
+        }
+        
+        // Show add customer form
+        function showAddCustomerForm() {
+            customerList.style.display = 'none';
+            formContainer.style.display = 'block';
+            customerDetails.style.display = 'none';
+        }
+        
+        // Hide add customer form
+        function hideAddCustomerForm() {
+            formContainer.style.display = 'none';
+            customerList.style.display = 'block';
+        }
+        
+        // Show customer details
+        function showCustomerDetails(customer) {
+            customerDetailsContent.innerHTML = `
+                <div class="info-item">
+                    <div class="info-label">ID:</div>
+                    <div class="info-value">${customer.id}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Name:</div>
+                    <div class="info-value">${customer.name}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Email:</div>
+                    <div class="info-value">${customer.email}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Phone:</div>
+                    <div class="info-value">${customer.phone}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Address:</div>
+                    <div class="info-value">${customer.address}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Product:</div>
+                    <div class="info-value">${customer.product}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Frequency:</div>
+                    <div class="info-value">${customer.frequency}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Joined:</div>
+                    <div class="info-value">${customer.joined}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Total Spent:</div>
+                    <div class="info-value">${customer.spent}</div>
+                </div>
+            `;
+            
+            customerList.style.display = 'none';
+            formContainer.style.display = 'none';
+            customerDetails.style.display = 'block';
+        }
+        
+        // Hide customer details
+        function hideCustomerDetails() {
+            customerDetails.style.display = 'none';
+            customerList.style.display = 'block';
+        }
+        
+        // Render all customers
+        function renderCustomers(filteredCustomers = null) {
+            const customersToRender = filteredCustomers || customers;
+            customerGrid.innerHTML = '';
+            
+            if (customersToRender.length === 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+                
+                customersToRender.forEach((customer, index) => {
+                    const customerCard = document.createElement('div');
+                    customerCard.className = 'customer-card';
+                    customerCard.style.animationDelay = `${index * 0.1}s`;
+                    
+                    customerCard.innerHTML = `
+                        <div class="customer-header">
+                            <div class="customer-name">${customer.name}</div>
+                            <div class="customer-id">${customer.id}</div>
+                        </div>
+                        <div class="info-item">
+                                <div class="info-label">Email:</div>
+                                <div class="info-value">${customer.email}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Phone:</div>
+                                <div class="info-value">${customer.phone}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Product:</div>
+                                <div class="info-value">${customer.product}</div>
+                            </div>
+                        </div>
+                        <div class="customer-footer">
+                            <div class="purchase-info">
+                                <span class="purchase-label">Total spent</span>
+                                <span class="purchase-value">${customer.spent}</span>
+                            </div>
+                            <div class="actions">
+                                <button class="action-btn view-btn" data-id="${customer.id}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn remove-btn" data-id="${customer.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    customerGrid.appendChild(customerCard);
+                    
+                    // Add event listeners to customer card buttons
+                    const viewBtn = customerCard.querySelector('.view-btn');
+                    viewBtn.addEventListener('click', function() {
+                        const customerId = this.getAttribute('data-id');
+                        const selectedCustomer = customers.find(c => c.id === customerId);
+                        if (selectedCustomer) {
+                            showCustomerDetails(selectedCustomer);
+                        }
+                    });
+                    
+                    const removeBtn = customerCard.querySelector('.remove-btn');
+                    removeBtn.addEventListener('click', function() {
+                        const customerId = this.getAttribute('data-id');
+                        removeCustomer(customerId);
+                    });
+                });
+            }
+        }
+        
+        // Remove a customer
+        function removeCustomer(customerId) {
+            customers = customers.filter(customer => customer.id !== customerId);
+            saveCustomersToLocalStorage();
+            renderCustomers();
+            showToast('Customer removed successfully', 'error');
+        }
+        
+        // Generate a customer ID
+        function generateCustomerId() {
+            const lastCustomer = customers[0];
+            if (!lastCustomer) return 'C001';
+            
+            const lastId = lastCustomer.id;
+            const idNumber = parseInt(lastId.substring(1)) + 1;
+            return 'C' + idNumber.toString().padStart(3, '0');
+        }
+        
+        // Format current date
+        function formatCurrentDate() {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const now = new Date();
+            return `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+        }
+        
+        // Show toast message
+        function showToast(message, type = 'success') {
+            const toastElement = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastElement.className = 'toast';
+            toastElement.classList.add(`toast-${type}`);
+            
+            // Set icon based on toast type
+            const toastIcon = toastElement.querySelector('i');
+            if (type === 'success') {
+                toastIcon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                toastIcon.className = 'fas fa-exclamation-circle';
+            }
+            
+            toastMessage.textContent = message;
+            toastElement.classList.add('show');
+            
+            setTimeout(() => {
+                toastElement.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Dairy themed animations and effects
+        function initDairyAnimations() {
+            // Create milk drop animation
+            document.body.addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn') || e.target.classList.contains('action-btn')) {
+                    createMilkDrop(e.target);
+                }
+            });
+        }
+        
+        // Create milk drop animation
+        function createMilkDrop(element) {
+            const drop = document.createElement('div');
+            drop.className = 'milk-drop';
+            
+            // Position the drop at the clicked element
+            const rect = element.getBoundingClientRect();
+            drop.style.left = rect.left + rect.width / 2 + 'px';
+            drop.style.top = rect.top + rect.height / 2 + 'px';
+            
+            document.body.appendChild(drop);
+            
+            // Animate the drop
+            let scale = 0;
+            let opacity = 0.7;
+            
+            const animate = () => {
+                scale += 4;
+                opacity -= 0.02;
+                
+                drop.style.transform = `scale(${scale})`;
+                drop.style.opacity = opacity;
+                
+                if (opacity > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    document.body.removeChild(drop);
+                }
+            };
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Initialize the application
+        loadCustomersFromLocalStorage();
+        renderCustomers();
+        initDairyAnimations();
+    </script>
+</body>
+</html>

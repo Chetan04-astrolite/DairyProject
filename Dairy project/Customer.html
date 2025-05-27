@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dairy Farm Customer Management</title>
+    <style>
+        :root {
+            --primary: #2c6e49;
+            --secondary: #4c956c;
+            --light: #fefee3;
+            --accent: #d68c45;
+            --dark: #2a2a2a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f9fc;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(44, 110, 73, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 80% 80%, rgba(76, 149, 108, 0.07) 0%, transparent 20%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            position: relative;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 8px 20px rgba(44, 110, 73, 0.15);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-icon::before {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .logo-icon::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .logo-text h1 {
+            color: white;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-text p {
+            color: var(--light);
+            font-size: 0.9rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-btn.active {
+            background: var(--accent);
+            box-shadow: 0 2px 8px rgba(214, 140, 69, 0.4);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            position: relative;
+        }
+        
+        .sidebar {
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            border-radius: 16px;
+            padding: 2rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(44, 110, 73, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slide-in 0.6s ease forwards;
+            display: none; /* Initially hidden */
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+        }
+        
+        .form-group select option {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(214, 140, 69, 0.3);
+        }
+        
+        .btn:hover {
+            background-color: #c07a3b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(214, 140, 69, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(214, 140, 69, 0.4);
+        }
+        
+        .btn-full {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .add-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(214, 140, 69, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .add-btn:hover {
+            background-color: #c07a3b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(214, 140, 69, 0.6);
+        }
+        
+        .add-btn i {
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .customer-list {
+            background-color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slide-in 0.6s ease 0.2s forwards;
+        }
+        
+        .customer-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(76, 149, 108, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+        
+        .customer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .customer-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+            position: relative;
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fade-in 0.5s ease forwards;
+        }
+        
+        .customer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        
+        .customer-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--secondary);
+            opacity: 0.7;
+        }
+        
+        .customer-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .customer-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .customer-id {
+            color: #999;
+            font-size: 0.8rem;
+        }
+        
+        .customer-info {
+            margin-bottom: 1rem;
+        }
+        
+        .info-item {
+            display: flex;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .info-label {
+            width: 100px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .info-value {
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .customer-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .purchase-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .purchase-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .purchase-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .action-btn {
+            background-color: transparent;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-btn:hover {
+            background-color: #f8f8f8;
+        }
+        
+        .view-btn {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .view-btn:hover {
+            background-color: rgba(44, 110, 73, 0.1);
+        }
+        
+        .edit-btn {
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+        
+        .edit-btn:hover {
+            background-color: rgba(214, 140, 69, 0.1);
+        }
+        
+        .remove-btn {
+            color: #e74c3c;
+            font-size: 1.2rem;
+        }
+        
+        .remove-btn:hover {
+            background-color: #fff8f8;
+            color: #e74c3c;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+            display: none;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ddd;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast i {
+            font-size: 1.2rem;
+        }
+        
+        .toast-success {
+            background-color: #2ecc71;
+        }
+        
+        .toast-error {
+            background-color: #e74c3c;
+        }
+        
+        .milk-drop {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .customer-details {
+            background-color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            animation: fade-in 0.5s ease forwards;
+            display: none;
+        }
+        
+        .customer-details h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.8rem;
+        }
+        
+        .details-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .back-btn {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+        
+        .back-btn:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            display: none;
+            animation: fade-in 0.5s ease forwards;
+        }
+        
+        .form-container h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .form-container p {
+            margin-bottom: 1.5rem;
+            color: #666;
+        }
+        
+        .form-container .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-container .form-group label {
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .form-container .form-group input, 
+        .form-container .form-group select,
+        .form-container .form-group textarea {
+            background-color: #f7f9fc;
+            border: 1px solid #eee;
+            color: var(--dark);
+        }
+        
+        .form-container .form-group select {
+            background-color: #f7f9fc;
+            color: var(--dark);
+        }
+        
+        .form-container .form-group select option {
+            background-color: white;
+            color: var(--dark);
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+        
+        .form-group.error input,
+        .form-group.error textarea {
+            border: 1px solid #e74c3c;
+        }
+        
+        .header-banner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E"),
+                linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 16px;
+            z-index: -1;
+        }
+        
+        /* Payments Section Styles */
+        .payments-section {
+            background-color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slide-in 0.6s ease 0.2s forwards;
+            display: none;
+        }
+        
+        .payments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .tab-btn {
+            background: #f7f9fc;
+            color: var(--dark);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .payment-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+            position: relative;
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fade-in 0.5s ease forwards;
+        }
+        
+        .payment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        
+        .payment-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--secondary);
+            opacity: 0.7;
+        }
+        
+        .payment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .payment-id {
+            color: #999;
+            font-size: 0.8rem;
+        }
+        
+        .payment-info {
+            margin-bottom: 1rem;
+        }
+        
+        .payment-status {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2ecc71;
+        }
+        
+        .payment-status.pending {
+            color: #f1c40f;
+        }
+        
+        .payment-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        /* Support Section Styles */
+        .support-section {
+            background-color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slide-in 0.6s ease 0.2s forwards;
+            display: none;
+        }
+        
+        .support-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .support-form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .ticket-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .ticket-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+            position: relative;
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fade-in 0.5s ease forwards;
+        }
+        
+        .ticket-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ticket-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--secondary);
+            opacity: 0.7;
+        }
+        
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .ticket-id {
+            color: #999;
+            font-size: 0.8rem;
+        }
+        
+        .ticket-status {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #3498db;
+        }
+        
+        .ticket-status.resolved {
+            color: #2ecc71;
+        }
+        
+        @keyframes slide-in {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .customer-grid,
+            .payment-grid,
+            .ticket-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .customer-list-header,
+            .payments-header,
+            .support-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .add-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+            
+            .form-container,
+            .support-form-container {
+                padding: 1.5rem;
+            }
+            
+            .nav-menu {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .nav-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-banner"></div>
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <div class="logo-text">
+                    <h1>FRESH DIARY</h1>
+                    <p>Customer Management System</p>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn active" id="nav-customers">Customers</button>
+                <button class="nav-btn" id="nav-payments">Payments</button>
+                <button class="nav-btn" id="nav-support">Support</button>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="customer-list" id="customer-list">
+                <div class="customer-list-header">
+                    <h2>Customer Directory</h2>
+                    <div class="search-bar">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Search customers...">
+                    </div>
+                </div>
+                
+                <div class="customer-grid" id="customer-grid">
+                    <!-- Customer cards will be generated here -->
+                </div>
+                
+                <div class="empty-state" id="empty-state">
+                    <i class="fas fa-users-slash"></i>
+                    <h3>No Customers Found</h3>
+                    <p>Add your first customer to get started</p>
+                </div>
+            </div>
+            
+            <div class="form-container" id="form-container">
+                <button class="back-btn" id="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </button>
+                
+                <h2 id="form-title">Add New Customer</h2>
+                <p id="form-description">Register a new customer to your dairy farm network</p>
+                
+                <form id="customer-form">
+                    <input type="hidden" id="customer-id" value="">
+                    <div class="form-group">
+                        <label for="name">Customer Name</label>
+                        <input type="text" id="name" placeholder="Full name" required>
+                        <span class="error-message" id="name-error"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="Email address" required>
+                        <span class="error-message" id="email-error"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" placeholder="Phone number" required>
+                        <span class="error-message" id="phone-error"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" placeholder="Delivery address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product">Preferred Product</label>
+                        <select id="product" required>
+                            <option value="">Select product</option>
+                            <option value="Buffalo Milk">Buffalo Milk</option>
+                            <option value="Cow Milk">Cow Milk</option>
+                            <option value="Paneer">Paneer</option>
+                            <option value="Ghee">Ghee</option>
+                            <option value="Curd">Curd</option>
+                            <option value="Buttermilk">Buttermilk</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="frequency">Delivery Frequency</label>
+                        <select id="frequency" required>
+                            <option value="">Select frequency</option>
+                            <option value="Daily">Daily</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Bi-weekly">Bi-weekly</option>
+                            <option value="Monthly">Monthly</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-full" id="form-submit-btn">
+                        <i class="fas fa-plus"></i> Add Customer
+                    </button>
+                </form>
+            </div>
+            
+            <div class="customer-details" id="customer-details">
+                <button class="back-btn" id="details-back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </button>
+                
+                <h3>Customer Details</h3>
+                <div class="customer-info" id="customer-details-content">
+                    <!-- Customer details will be shown here -->
+                </div>
+                
+                <div class="details-actions">
+                    <button class="btn" id="edit-customer-btn">
+                        <i class="fas fa-edit"></i> Edit Customer
+                    </button>
+                </div>
+            </div>
+            
+            <div class="payments-section" id="payments-section">
+                <div class="payments-header">
+                    <h2>Payment Records</h2>
+                    <div class="search-bar">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="payment-search-input" placeholder="Search payments...">
+                    </div>
+                </div>
+                
+                <div class="tab-buttons">
+                    <button class="tab-btn active" id="successful-payments-tab">Successful Payments</button>
+                    <button class="tab-btn" id="pending-payments-tab">Pending Payments</button>
+                </div>
+                
+                <div class="payment-grid" id="payment-grid">
+                    <!-- Payment cards will be generated here -->
+                </div>
+                
+                <div class="empty-state" id="payment-empty-state">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3>No Payments Found</h3>
+                    <p>No payment records available</p>
+                </div>
+            </div>
+            
+            <div class="support-section" id="support-section">
+                <div class="support-header">
+                    <h2>Support Center</h2>
+                </div>
+                
+                <div class="support-form-container">
+                    <h3>Submit a Support Ticket</h3>
+                    <form id="support-form">
+                        <div class="form-group">
+                            <label for="support-subject">Subject</label>
+                            <input type="text" id="support-subject" placeholder="Issue subject" required>
+                            <span class="error-message" id="support-subject-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="support-customer">Customer</label>
+                            <select id="support-customer" required>
+                                <option value="">Select customer</option>
+                                <!-- Customer options will be populated dynamically -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="support-description">Description</label>
+                            <textarea id="support-description" placeholder="Describe the issue" required></textarea>
+                            <span class="error-message" id="support-description-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="support-priority">Priority</label>
+                            <select id="support-priority" required>
+                                <option value="">Select priority</option>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-full">
+                            <i class="fas fa-ticket-alt"></i> Submit Ticket
+                        </button>
+                    </form>
+                </div>
+                
+                <h3 style="margin-top: 2rem;">Ticket History</h3>
+                <div class="ticket-grid" id="ticket-grid">
+                    <!-- Ticket cards will be generated here -->
+                </div>
+                
+                <div class="empty-state" id="ticket-empty-state">
+                    <i class="fas fa-ticket-alt"></i>
+                    <h3>No Tickets Found</h3>
+                    <p>Submit a ticket to get started</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="add-btn" id="add-customer-btn">
+        <i class="fas fa-plus"></i>
+    </div>
+    
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Customer added successfully</span>
+    </div>
+    
+    <script>
+        // Sample initial customers with Indian details
+        let defaultCustomers = [
+            {
+                id: 'C001',
+                name: 'Rajesh Kumar',
+                email: 'rajesh.kumar@gmail.com',
+                phone: '9876543210',
+                address: '42, Gandhi Road, Pune, Maharashtra',
+                product: 'Buffalo Milk',
+                frequency: 'Daily',
+                joined: 'Jan 15, 2025',
+                spent: '₹4,350'
+            },
+            {
+                id: 'C002',
+                name: 'Priya Sharma',
+                email: 'priya.sharma@gmail.com',
+                phone: '8765432109',
+                address: '78, Nehru Nagar, Bangalore, Karnataka',
+                product: 'Paneer',
+                frequency: 'Weekly',
+                joined: 'Feb 3, 2025',
+                spent: '₹2,780'
+            },
+            {
+                id: 'C003',
+                name: 'Amit Patel',
+                email: 'amit.patel@gmail.com',
+                phone: '7654321098',
+                address: '15, Subhash Road, Ahmedabad, Gujarat',
+                product: 'Ghee',
+                frequency: 'Monthly',
+                joined: 'Mar 10, 2025',
+                spent: '₹5,125'
+            }
+        ];
+        
+        // Sample initial payments
+        let defaultPayments = [
+            {
+                id: 'P001',
+                customerId: 'C001',
+                customerName: 'Rajesh Kumar',
+                amount: '₹1,200',
+                date: 'Jan 20, 2025',
+                status: 'Successful'
+            },
+            {
+                id: 'P002',
+                customerId: 'C002',
+                customerName: 'Priya Sharma',
+                amount: '₹800',
+                date: 'Feb 5, 2025',
+                status: 'Successful'
+            },
+            {
+                id: 'P003',
+                customerId: 'C003',
+                customerName: 'Amit Patel',
+                amount: '₹1,500',
+                date: 'Mar 15, 2025',
+                status: 'Pending'
+            },
+            {
+                id: 'P004',
+                customerId: 'C001',
+                customerName: 'Rajesh Kumar',
+                amount: '₹1,000',
+                date: 'May 10, 2025',
+                status: 'Pending'
+            }
+        ];
+        
+        // Sample initial tickets
+        let defaultTickets = [
+            {
+                id: 'T001',
+                subject: 'Delivery Delay',
+                customerId: 'C001',
+                customerName: 'Rajesh Kumar',
+                description: 'Milk delivery was delayed by two hours.',
+                priority: 'Medium',
+                date: 'Jan 16, 2025',
+                status: 'Open'
+            },
+            {
+                id: 'T002',
+                subject: 'Product Quality',
+                customerId: 'C002',
+                customerName: 'Priya Sharma',
+                description: 'Received spoiled paneer in last delivery.',
+                priority: 'High',
+                date: 'Feb 4, 2025',
+                status: 'Resolved'
+            }
+        ];
+        
+        // DOM Elements
+        const customerForm = document.getElementById('customer-form');
+        const customerGrid = document.getElementById('customer-grid');
+        const emptyState = document.getElementById('empty-state');
+        const searchInput = document.getElementById('search-input');
+        const toast = document.getElementById('toast');
+        const formContainer = document.getElementById('form-container');
+        const customerList = document.getElementById('customer-list');
+        const addCustomerBtn = document.getElementById('add-customer-btn');
+        const backBtn = document.getElementById('back-btn');
+        const detailsBackBtn = document.getElementById('details-back-btn');
+        const customerDetails = document.getElementById('customer-details');
+        const customerDetailsContent = document.getElementById('customer-details-content');
+        const editCustomerBtn = document.getElementById('edit-customer-btn');
+        const formTitle = document.getElementById('form-title');
+        const formDescription = document.getElementById('form-description');
+        const formSubmitBtn = document.getElementById('form-submit-btn');
+        const customerIdInput = document.getElementById('customer-id');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const nameError = document.getElementById('name-error');
+        const emailError = document.getElementById('email-error');
+        const phoneError = document.getElementById('phone-error');
+        const navCustomers = document.getElementById('nav-customers');
+        const navPayments = document.getElementById('nav-payments');
+        const navSupport = document.getElementById('nav-support');
+        const paymentsSection = document.getElementById('payments-section');
+        const successfulPaymentsTab = document.getElementById('successful-payments-tab');
+        const pendingPaymentsTab = document.getElementById('pending-payments-tab');
+        const paymentGrid = document.getElementById('payment-grid');
+        const paymentEmptyState = document.getElementById('payment-empty-state');
+        const paymentSearchInput = document.getElementById('payment-search-input');
+        const supportSection = document.getElementById('support-section');
+        const supportForm = document.getElementById('support-form');
+        const ticketGrid = document.getElementById('ticket-grid');
+        const ticketEmptyState = document.getElementById('ticket-empty-state');
+        const supportSubjectInput = document.getElementById('support-subject');
+        const supportCustomerSelect = document.getElementById('support-customer');
+        const supportDescriptionInput = document.getElementById('support-description');
+        const supportPrioritySelect = document.getElementById('support-priority');
+        const supportSubjectError = document.getElementById('support-subject-error');
+        const supportDescriptionError = document.getElementById('support-description-error');
+        
+        // Current selected customer id
+        let currentCustomerId = null;
+        
+        // Data arrays
+        let customers = [];
+        let payments = [];
+        let tickets = [];
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCustomersFromLocalStorage();
+            loadPaymentsFromLocalStorage();
+            loadTicketsFromLocalStorage();
+            renderCustomers();
+            renderPayments();
+            renderTickets();
+            populateCustomerSelect();
+            initDairyAnimations();
+            setupEventListeners();
+        });
+        
+        // Load customers from local storage
+        function loadCustomersFromLocalStorage() {
+            const storedCustomers = localStorage.getItem('dairyFarmCustomers');
+            if (storedCustomers) {
+                customers = JSON.parse(storedCustomers);
+            } else {
+                customers = [...defaultCustomers];
+                saveCustomersToLocalStorage();
+            }
+        }
+        
+        // Save customers to local storage
+        function saveCustomersToLocalStorage() {
+            localStorage.setItem('dairyFarmCustomers', JSON.stringify(customers));
+        }
+        
+        // Load payments from local storage
+        function loadPaymentsFromLocalStorage() {
+            const storedPayments = localStorage.getItem('dairyFarmPayments');
+            if (storedPayments) {
+                payments = JSON.parse(storedPayments);
+            } else {
+                payments = [...defaultPayments];
+                savePaymentsToLocalStorage();
+            }
+        }
+        
+        // Save payments to local storage
+        function savePaymentsToLocalStorage() {
+            localStorage.setItem('dairyFarmPayments', JSON.stringify(payments));
+        }
+        
+        // Load tickets from local storage
+        function loadTicketsFromLocalStorage() {
+            const storedTickets = localStorage.getItem('dairyFarmTickets');
+            if (storedTickets) {
+                tickets = JSON.parse(storedTickets);
+            } else {
+                tickets = [...defaultTickets];
+                saveTicketsToLocalStorage();
+            }
+        }
+        
+        // Save tickets to local storage
+        function saveTicketsToLocalStorage() {
+            localStorage.setItem('dairyFarmTickets', JSON.stringify(tickets));
+        }
+        
+        // Validation functions for customers
+        function validateName(name) {
+            const nameRegex = /^[a-zA-Z\s]{3,}$/;
+            if (!nameRegex.test(name)) {
+                nameError.textContent = 'Name must be at least 3 alphabetical characters';
+                nameError.style.display = 'block';
+                nameInput.parentElement.classList.add('error');
+                return false;
+            }
+            nameError.style.display = 'none';
+            nameInput.parentElement.classList.remove('error');
+            return true;
+        }
+        
+        function validateEmail(email) {
+            const emailRegex = /^[a-zA-Z0-9._%+-]{3,}@(gmail\.com|yahoo\.com|outlook\.com)$/;
+            if (!emailRegex.test(email)) {
+                emailError.textContent = 'Email must be at least 3 characters and use @gmail.com, @yahoo.com, or @outlook.com';
+                emailError.style.display = 'block';
+                emailInput.parentElement.classList.add('error');
+                return false;
+            }
+            emailError.style.display = 'none';
+            emailInput.parentElement.classList.remove('error');
+            return true;
+        }
+        
+        function validatePhone(phone) {
+            const phoneRegex = /^[6-9][0-9]{9}$/;
+            if (!phoneRegex.test(phone)) {
+                phoneError.textContent = 'Phone number must be exactly 10 digits starting with 6, 7, 8, or 9';
+                phoneError.style.display = 'block';
+                phoneInput.parentElement.classList.add('error');
+                return false;
+            }
+            phoneError.style.display = 'none';
+            phoneInput.parentElement.classList.remove('error');
+            return true;
+        }
+        
+        // Validation functions for support form
+        function validateSubject(subject) {
+            if (subject.length < 5) {
+                supportSubjectError.textContent = 'Subject must be at least 5 characters';
+                supportSubjectError.style.display = 'block';
+                supportSubjectInput.parentElement.classList.add('error');
+                return false;
+            }
+            supportSubjectError.style.display = 'none';
+            supportSubjectInput.parentElement.classList.remove('error');
+            return true;
+        }
+        
+        function validateDescription(description) {
+            if (description.length < 10) {
+                supportDescriptionError.textContent = 'Description must be at least 10 characters';
+                supportDescriptionError.style.display = 'block';
+                supportDescriptionInput.parentElement.classList.add('error');
+                return false;
+            }
+            supportDescriptionError.style.display = 'none';
+            supportDescriptionInput.parentElement.classList.remove('error');
+            return true;
+        }
+        
+        // Render customers to the grid
+        function renderCustomers(searchTerm = '') {
+            customerGrid.innerHTML = '';
+            
+            const filteredCustomers = customers.filter(customer => 
+                customer.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                customer.product.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            
+            if (filteredCustomers.length === 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+                
+                filteredCustomers.forEach((customer, index) => {
+                    const card = createCustomerCard(customer, index);
+                    customerGrid.appendChild(card);
+                    
+                    setTimeout(() => {
+                        card.style.animation = `fade-in 0.5s ease forwards ${index * 0.1}s`;
+                    }, 10);
+                });
+            }
+            
+            populateCustomerSelect();
+        }
+        
+        // Create a customer card element
+        function createCustomerCard(customer, index) {
+            const card = document.createElement('div');
+            card.className = 'customer-card';
+            card.dataset.id = customer.id;
+            
+            card.innerHTML = `
+                <div class="customer-header">
+                    <h3 class="customer-name">${customer.name}</h3>
+                    <span class="customer-id">${customer.id}</span>
+                </div>
+                <div class="customer-info">
+                    <div class="info-item">
+                        <span class="info-label">Product:</span>
+                        <span class="info-value">${customer.product}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Frequency:</span>
+                        <span class="info-value">${customer.frequency}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phone:</span>
+                        <span class="info-value">${customer.phone}</span>
+                    </div>
+                </div>
+                <div class="customer-footer">
+                    <div class="purchase-info">
+                        <span class="purchase-label">Total Spent</span>
+                        <span class="purchase-value">${customer.spent}</span>
+                    </div>
+                    <div class="actions">
+                        <button class="action-btn view-btn" data-id="${customer.id}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn edit-btn" data-id="${customer.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn remove-btn" data-id="${customer.id}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            card.querySelector('.view-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                showCustomerDetails(customer.id);
+            });
+            
+            card.querySelector('.edit-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                editCustomer(customer.id);
+            });
+            
+            card.querySelector('.remove-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                removeCustomer(customer.id);
+            });
+            
+            card.addEventListener('click', () => {
+                showCustomerDetails(customer.id);
+            });
+            
+            return card;
+        }
+        
+        // Add new customer
+        function addCustomer(customer) {
+            const newId = 'C' + String(customers.length + 1).padStart(3, '0');
+            
+            const today = new Date();
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const joined = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+            
+            const spent = '₹' + (Math.floor(Math.random() * 5000) + 1000).toLocaleString();
+            
+            const newCustomer = {
+                id: newId,
+                ...customer,
+                joined,
+                spent
+            };
+            
+            customers.push(newCustomer);
+            saveCustomersToLocalStorage();
+            showToast('Customer added successfully', 'success');
+            renderCustomers();
+            
+            return newCustomer;
+        }
+        
+        // Edit existing customer
+        function editCustomer(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) return;
+            
+            currentCustomerId = id;
+            
+            document.getElementById('name').value = customer.name;
+            document.getElementById('email').value = customer.email;
+            document.getElementById('phone').value = customer.phone;
+            document.getElementById('address').value = customer.address;
+            document.getElementById('product').value = customer.product;
+            document.getElementById('frequency').value = customer.frequency;
+            document.getElementById('customer-id').value = customer.id;
+            
+            nameError.style.display = 'none';
+            emailError.style.display = 'none';
+            phoneError.style.display = 'none';
+            nameInput.parentElement.classList.remove('error');
+            emailInput.parentElement.classList.remove('error');
+            phoneInput.parentElement.classList.remove('error');
+            
+            formTitle.textContent = 'Edit Customer';
+            formDescription.textContent = 'Update customer information';
+            formSubmitBtn.innerHTML = '<i class="fas fa-save"></i> Update Customer';
+            
+            showForm();
+        }
+        
+        // Update customer data
+        function updateCustomer(id, updatedData) {
+            const index = customers.findIndex(c => c.id === id);
+            if (index === -1) return false;
+            
+            const customer = customers[index];
+            const updatedCustomer = {
+                ...customer,
+                ...updatedData
+            };
+            
+            customers[index] = updatedCustomer;
+            saveCustomersToLocalStorage();
+            showToast('Customer updated successfully', 'success');
+            renderCustomers();
+            
+            return true;
+        }
+        
+        // Remove customer
+        function removeCustomer(id) {
+            if (confirm('Are you sure you want to delete this customer?')) {
+                customers = customers.filter(c => c.id !== id);
+                payments = payments.filter(p => p.customerId !== id);
+                tickets = tickets.filter(t => t.customerId !== id);
+                
+                saveCustomersToLocalStorage();
+                savePaymentsToLocalStorage();
+                saveTicketsToLocalStorage();
+                
+                showToast('Customer and related data removed successfully', 'success');
+                
+                renderCustomers();
+                renderPayments();
+                renderTickets();
+            }
+        }
+        
+        // Show customer details
+        function showCustomerDetails(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) return;
+            
+            currentCustomerId = id;
+            
+            const detailsHtml = `
+                <div class="info-item">
+                    <span class="info-label">Customer ID:</span>
+                    <span class="info-value">${customer.id}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">${customer.name}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">${customer.email}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Phone:</span>
+                    <span class="info-value">${customer.phone}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Address:</span>
+                    <span class="info-value">${customer.address}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Product:</span>
+                    <span class="info-value">${customer.product}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Frequency:</span>
+                    <span class="info-value">${customer.frequency}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Joined:</span>
+                    <span class="info-value">${customer.joined}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Total Spent:</span>
+                    <span class="info-value">${customer.spent}</span>
+                </div>
+            `;
+            
+            customerDetailsContent.innerHTML = detailsHtml;
+            
+            showCustomerDetailsView();
+        }
+        
+        // Render payments to the grid
+        function renderPayments(searchTerm = '', statusFilter = 'Successful') {
+            paymentGrid.innerHTML = '';
+            
+            const filteredPayments = payments.filter(payment => 
+                (payment.customerName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                 payment.id.toLowerCase().includes(searchTerm.toLowerCase())) &&
+                payment.status === statusFilter
+            );
+            
+            if (filteredPayments.length === 0) {
+                paymentEmptyState.style.display = 'block';
+            } else {
+                paymentEmptyState.style.display = 'none';
+                
+                filteredPayments.forEach((payment, index) => {
+                    const card = createPaymentCard(payment, index);
+                    paymentGrid.appendChild(card);
+                    
+                    setTimeout(() => {
+                        card.style.animation = `fade-in 0.5s ease forwards ${index * 0.1}s`;
+                    }, 10);
+                });
+            }
+        }
+        
+        // Create a payment card element
+        function createPaymentCard(payment, index) {
+            const card = document.createElement('div');
+            card.className = 'payment-card';
+            card.dataset.id = payment.id;
+            
+            card.innerHTML = `
+                <div class="payment-header">
+                    <h3 class="customer-name">${payment.customerName}</h3>
+                    <span class="payment-id">${payment.id}</span>
+                </div>
+                <div class="payment-info">
+                    <div class="info-item">
+                        <span class="info-label">Amount:</span>
+                        <span class="info-value">${payment.amount}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Date:</span>
+                        <span class="info-value">${payment.date}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Status:</span>
+                        <span class="info-value payment-status ${payment.status.toLowerCase()}">${payment.status}</span>
+                    </div>
+                </div>
+                ${payment.status === 'Pending' ? `
+                <div class="payment-actions">
+                    <button class="btn" data-id="${payment.id}">
+                        <i class="fas fa-check"></i> Mark as Completed
+                    </button>
+                </div>
+                ` : ''}
+            `;
+            
+            if (payment.status === 'Pending') {
+                card.querySelector('.btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    markPaymentCompleted(payment.id);
+                });
+            }
+            
+            return card;
+        }
+        
+        // Mark payment as completed
+        function markPaymentCompleted(id) {
+            const index = payments.findIndex(p => p.id === id);
+            if (index === -1) return;
+            
+            payments[index].status = 'Successful';
+            savePaymentsToLocalStorage();
+            showToast('Payment marked as completed', 'success');
+            renderPayments(paymentSearchInput.value, pendingPaymentsTab.classList.contains('active') ? 'Pending' : 'Successful');
+        }
+        
+        // Render tickets to the grid
+        function renderTickets() {
+            ticketGrid.innerHTML = '';
+            
+            if (tickets.length === 0) {
+                ticketEmptyState.style.display = 'block';
+            } else {
+                ticketEmptyState.style.display = 'none';
+                
+                tickets.forEach((ticket, index) => {
+                    const card = createTicketCard(ticket, index);
+                    ticketGrid.appendChild(card);
+                    
+                    setTimeout(() => {
+                        card.style.animation = `fade-in 0.5s ease forwards ${index * 0.1}s`;
+                    }, 10);
+                });
+            }
+        }
+        
+        // Create a ticket card element
+        function createTicketCard(ticket, index) {
+            const card = document.createElement('div');
+            card.className = 'ticket-card';
+            card.dataset.id = ticket.id;
+            
+            card.innerHTML = `
+                <div class="ticket-header">
+                    <h3>${ticket.subject}</h3>
+                    <span class="ticket-id">${ticket.id}</span>
+                </div>
+                <div class="ticket-info">
+                    <div class="info-item">
+                        <span class="info-label">Customer:</span>
+                        <span class="info-value">${ticket.customerName}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Priority:</span>
+                        <span class="info-value">${ticket.priority}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Date:</span>
+                        <span class="info-value">${ticket.date}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Status:</span>
+                        <span class="info-value ticket-status ${ticket.status.toLowerCase()}">${ticket.status}</span>
+                    </div>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => {
+                alert(`Ticket Details:\n\nSubject: ${ticket.subject}\nCustomer: ${ticket.customerName}\nDescription: ${ticket.description}\nPriority: ${ticket.priority}\nDate: ${ticket.date}\nStatus: ${ticket.status}`);
+            });
+            
+            return card;
+        }
+        
+        // Add new support ticket
+        function addTicket(ticket) {
+            const newId = 'T' + String(tickets.length + 1).padStart(3, '0');
+            
+            const today = new Date();
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const date = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+            
+            const newTicket = {
+                id: newId,
+                ...ticket,
+                date,
+                status: 'Open'
+            };
+            
+            tickets.push(newTicket);
+            saveTicketsToLocalStorage();
+            showToast('Ticket submitted successfully', 'success');
+            renderTickets();
+            supportForm.reset();
+            supportSubjectError.style.display = 'none';
+            supportDescriptionError.style.display = 'none';
+            supportSubjectInput.parentElement.classList.remove('error');
+            supportDescriptionInput.parentElement.classList.remove('error');
+        }
+        
+        // Populate customer select dropdown
+        function populateCustomerSelect() {
+            supportCustomerSelect.innerHTML = '<option value="">Select customer</option>';
+            customers.forEach(customer => {
+                const option = document.createElement('option');
+                option.value = customer.id;
+                option.textContent = customer.name;
+                supportCustomerSelect.appendChild(option);
+            });
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Customer form submit
+            customerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    name: document.getElementById('name').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    address: document.getElementById('address').value.trim(),
+                    product: document.getElementById('product').value,
+                    frequency: document.getElementById('frequency').value
+                };
+                
+                const isNameValid = validateName(formData.name);
+                const isEmailValid = validateEmail(formData.email);
+                const isPhoneValid = validatePhone(formData.phone);
+                
+                if (isNameValid && isEmailValid && isPhoneValid && formData.product && formData.frequency) {
+                    const customerId = document.getElementById('customer-id').value;
+                    
+                    if (customerId) {
+                        updateCustomer(customerId, formData);
+                    } else {
+                        addCustomer(formData);
+                    }
+                    
+                    customerForm.reset();
+                    nameError.style.display = 'none';
+                    emailError.style.display = 'none';
+                    phoneError.style.display = 'none';
+                    nameInput.parentElement.classList.remove('error');
+                    emailInput.parentElement.classList.remove('error');
+                    phoneInput.parentElement.classList.remove('error');
+                    
+                    showCustomerList();
+                }
+            });
+            
+            // Real-time validation for customer form
+            nameInput.addEventListener('input', function() {
+                validateName(this.value.trim());
+            });
+            
+            emailInput.addEventListener('input', function() {
+                validateEmail(this.value.trim());
+            });
+            
+            phoneInput.addEventListener('input', function() {
+                validatePhone(this.value.trim());
+            });
+            
+            // Customer search
+            searchInput.addEventListener('input', function() {
+                renderCustomers(this.value);
+            });
+            
+            // Add customer button
+            addCustomerBtn.addEventListener('click', function() {
+                customerForm.reset();
+                document.getElementById('customer-id').value = '';
+                
+                nameError.style.display = 'none';
+                emailError.style.display = 'none';
+                phoneError.style.display = 'none';
+                nameInput.parentElement.classList.remove('error');
+                emailInput.parentElement.classList.remove('error');
+                phoneInput.parentElement.classList.remove('error');
+                
+                formTitle.textContent = 'Add New Customer';
+                formDescription.textContent = 'Register a new customer to your dairy farm network';
+                formSubmitBtn.innerHTML = '<i class="fas fa-plus"></i> Add Customer';
+                
+                showForm();
+            });
+            
+            // Customer back button
+            backBtn.addEventListener('click', function() {
+                showCustomerList();
+            });
+            
+            // Customer details back button
+            detailsBackBtn.addEventListener('click', function() {
+                showCustomerList();
+            });
+            
+            // Edit customer button
+            editCustomerBtn.addEventListener('click', function() {
+                if (currentCustomerId) {
+                    editCustomer(currentCustomerId);
+                }
+            });
+            
+            // Navigation buttons
+            navCustomers.addEventListener('click', function() {
+                setActiveNav(this);
+                showCustomerList();
+                addCustomerBtn.style.display = 'flex';
+            });
+            
+            navPayments.addEventListener('click', function() {
+                setActiveNav(this);
+                showPaymentsSection();
+                addCustomerBtn.style.display = 'none';
+            });
+            
+            navSupport.addEventListener('click', function() {
+                setActiveNav(this);
+                showSupportSection();
+                addCustomerBtn.style.display = 'none';
+            });
+            
+            // Payment tabs
+            successfulPaymentsTab.addEventListener('click', function() {
+                setActiveTab(this);
+                renderPayments(paymentSearchInput.value, 'Successful');
+            });
+            
+            pendingPaymentsTab.addEventListener('click', function() {
+                setActiveTab(this);
+                renderPayments(paymentSearchInput.value, 'Pending');
+            });
+            
+            // Payment search
+            paymentSearchInput.addEventListener('input', function() {
+                const status = successfulPaymentsTab.classList.contains('active') ? 'Successful' : 'Pending';
+                renderPayments(this.value, status);
+            });
+            
+            // Support form submit
+            supportForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    subject: supportSubjectInput.value.trim(),
+                    customerId: supportCustomerSelect.value,
+                    customerName: supportCustomerSelect.options[supportCustomerSelect.selectedIndex].text,
+                    description: supportDescriptionInput.value.trim(),
+                    priority: supportPrioritySelect.value
+                };
+                
+                const isSubjectValid = validateSubject(formData.subject);
+                const isDescriptionValid = validateDescription(formData.description);
+                
+                if (isSubjectValid && isDescriptionValid && formData.customerId && formData.priority) {
+                    addTicket(formData);
+                }
+            });
+            
+            // Real-time validation for support form
+            supportSubjectInput.addEventListener('input', function() {
+                validateSubject(this.value.trim());
+            });
+            
+            supportDescriptionInput.addEventListener('input', function() {
+                validateDescription(this.value.trim());
+            });
+        }
+        
+        // Set active navigation button
+        function setActiveNav(button) {
+            [navCustomers, navPayments, navSupport].forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        }
+        
+        // Set active tab button
+        function setActiveTab(button) {
+            [successfulPaymentsTab, pendingPaymentsTab].forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        }
+        
+        // Show customer list
+        function showCustomerList() {
+            customerList.style.display = 'block';
+            formContainer.style.display = 'none';
+            customerDetails.style.display = 'none';
+            paymentsSection.style.display = 'none';
+            supportSection.style.display = 'none';
+        }
+        
+        // Show customer form
+        function showForm() {
+            customerList.style.display = 'none';
+            formContainer.style.display = 'block';
+            customerDetails.style.display = 'none';
+            paymentsSection.style.display = 'none';
+            supportSection.style.display = 'none';
+        }
+        
+        // Show customer details view
+        function showCustomerDetailsView() {
+            customerList.style.display = 'none';
+            formContainer.style.display = 'none';
+            customerDetails.style.display = 'block';
+            paymentsSection.style.display = 'none';
+            supportSection.style.display = 'none';
+        }
+        
+        // Show payments section
+        function showPaymentsSection() {
+            customerList.style.display = 'none';
+            formContainer.style.display = 'none';
+            customerDetails.style.display = 'none';
+            paymentsSection.style.display = 'block';
+            supportSection.style.display = 'none';
+            renderPayments(paymentSearchInput.value, successfulPaymentsTab.classList.contains('active') ? 'Successful' : 'Pending');
+        }
+        
+        // Show support section
+        function showSupportSection() {
+            customerList.style.display = 'none';
+            formContainer.style.display = 'none';
+            customerDetails.style.display = 'none';
+            paymentsSection.style.display = 'none';
+            supportSection.style.display = 'block';
+            renderTickets();
+        }
+        
+        // Show toast message
+        function showToast(message, type = 'success') {
+            const toastMessage = document.getElementById('toast-message');
+            toastMessage.textContent = message;
+            
+            toast.className = 'toast';
+            if (type === 'success') {
+                toast.classList.add('toast-success');
+                toast.querySelector('i').className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                toast.classList.add('toast-error');
+                toast.querySelector('i').className = 'fas fa-exclamation-circle';
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Initialize dairy-themed animations
+        function initDairyAnimations() {
+            document.addEventListener('click', function(e) {
+                const milkDrop = document.createElement('div');
+                milkDrop.className = 'milk-drop';
+                milkDrop.style.left = e.pageX + 'px';
+                milkDrop.style.top = e.pageY + 'px';
+                
+                document.body.appendChild(milkDrop);
+                
+                let size = 0;
+                const interval = setInterval(() => {
+                    size += 2;
+                    milkDrop.style.width = size + 'px';
+                    milkDrop.style.height = size + 'px';
+                    milkDrop.style.opacity = (1 - size / 50);
+                    
+                    if (size >= 50) {
+                        clearInterval(interval);
+                        milkDrop.remove();
+                    }
+                }, 20);
+            });
+        }
+    </script>
+</body>
+</html>

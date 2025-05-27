@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Milk Collection Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #e0eafc, #cfdef3);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 200px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+        }
+
+        .filter-search {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 40px;
+            flex-wrap: wrap;
+        }
+
+        select, input[type="text"] {
+            padding: 10px 15px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            outline: none;
+            font-size: 16px;
+            margin: 5px;
+            transition: 0.3s;
+        }
+
+        select:hover, input[type="text"]:hover {
+            border-color: #6a11cb;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 18px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e0f7fa;
+        }
+
+        .status-active {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: red;
+            font-weight: bold;
+        }
+
+        .logo {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            height: 80px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="Images/ATSlogo.jpg" alt="Logo" class="logo">
+    Milk Collection Dashboard
+</header>
+
+<div class="stats">
+    <div class="card" style="background: linear-gradient(135deg, #89f7fe, #66a6ff);">
+        Total Suppliers: 60
+    </div>
+    <div class="card" style="background: linear-gradient(135deg, #fddb92, #d1fdff);">
+        Today's Collection: 50L
+    </div>
+    <div class="card" style="background: linear-gradient(135deg, #ffecd2, #fcb69f);">
+        Avg. Quality: B
+    </div>
+    <div class="card" style="background: linear-gradient(135deg, #c3cfe2, #c3cfe2);">
+        Pending Payments: ₹30,000
+    </div>
+</div>
+
+<div class="filter-search">
+    <select>
+        <option>All Statuses</option>
+        <option>Active</option>
+        <option>Pending</option>
+    </select>
+    <input type="text" placeholder="Search by supplier name...">
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Supplier ID</th>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Yield (L)</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>ATS01</td>
+            <td>Chetan</td>
+            <td>Guntur</td>
+            <td>35</td>
+            <td class="status-active">Active</td>
+        </tr>
+        <tr>
+            <td>ATS02</td>
+            <td>Charan</td>
+            <td>Hyderabad</td>
+            <td>28</td>
+            <td class="status-active">Active</td>
+        </tr>
+        <tr>
+            <td>ATS03</td>
+            <td>Vani</td>
+            <td>Kakinada</td>
+            <td>40</td>
+            <td class="status-active">Active</td>
+        </tr>
+        <tr>
+            <td>ATS04</td>
+            <td>Kavita</td>
+            <td>Nellore</td>
+            <td>25</td>
+            <td class="status-pending">Pending</td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
